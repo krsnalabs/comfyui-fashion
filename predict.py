@@ -50,63 +50,56 @@ class Predictor(BasePredictor):
     ):
         shutil.copy(input_file, os.path.join(INPUT_DIR, filename))
 
-    # Update nodes in the JSON workflow to modify your workflow based on the given inputs
     def update_workflow(self, workflow, **kwargs):
-        # Below is an example showing how to get the node you need and update the inputs
-
-        # positive_prompt = workflow["6"]["inputs"]
-        # positive_prompt["text"] = kwargs["prompt"]
-
-        # negative_prompt = workflow["7"]["inputs"]
-        # negative_prompt["text"] = f"nsfw, {kwargs['negative_prompt']}"
-
-        # sampler = workflow["3"]["inputs"]
-        # sampler["seed"] = kwargs["seed"]
-        pass
+        # Update the image URLs for the three images
+        workflow["10"]["inputs"]["image"] = kwargs["image_1_url"]
+        workflow["11"]["inputs"]["image"] = kwargs["image_2_url"]
+        workflow["16"]["inputs"]["image"] = kwargs["image_3_url"]
+        
+        # Update the prompts
+        workflow["22"]["inputs"]["text_positive"] = kwargs["prompt_1"]
+        workflow["24"]["inputs"]["text_positive"] = kwargs["prompt_2"]
+        
+        # Update any other workflow-specific parameters, if needed
+        workflow["14"]["inputs"]["seed"] = kwargs["seed"]  # Example of setting a seed
 
     def predict(
         self,
-        prompt: str = Input(
-            default="",
-        ),
-        negative_prompt: str = Input(
-            description="Things you do not want to see in your image",
-            default="",
-        ),
-        image: Path = Input(
-            description="An input image",
-            default=None,
-        ),
+        image_1_url: str = Input(description="URL for the first image"),
+        image_2_url: str = Input(description="URL for the second image"),
+        image_3_url: str = Input(description="URL for the third image"),
+        prompt_1: str = Input(default="shirt", description="First prompt for the text input"),
+        prompt_2: str = Input(default="pant, belt", description="Second prompt for the text input"),
+        seed: int = seed_helper.predict_seed(),
         output_format: str = optimise_images.predict_output_format(),
         output_quality: int = optimise_images.predict_output_quality(),
-        seed: int = seed_helper.predict_seed(),
     ) -> List[Path]:
         """Run a single prediction on the model"""
         self.comfyUI.cleanup(ALL_DIRECTORIES)
 
-        # Make sure to set the seeds in your workflow
+        # Ensure the seed is set
         seed = seed_helper.generate(seed)
 
-        image_filename = None
-        if image:
-            image_filename = self.filename_with_extension(image, "image")
-            self.handle_input_file(image, image_filename)
-
+        # Load and update the workflow with the input images and prompts
         with open(api_json_file, "r") as file:
             workflow = json.loads(file.read())
 
         self.update_workflow(
             workflow,
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image_filename=image_filename,
+            image_1_url=image_1_url,
+            image_2_url=image_2_url,
+            image_3_url=image_3_url,
+            prompt_1=prompt_1,
+            prompt_2=prompt_2,
             seed=seed,
         )
 
+        # Load and run the workflow in ComfyUI
         wf = self.comfyUI.load_workflow(workflow)
         self.comfyUI.connect()
         self.comfyUI.run_workflow(wf)
 
+        # Optimise the generated images and return the paths
         return optimise_images.optimise_image_files(
             output_format, output_quality, self.comfyUI.get_files(OUTPUT_DIR)
         )
