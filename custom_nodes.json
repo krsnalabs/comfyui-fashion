@@ -196,5 +196,17 @@
   {
     "repo": "https://github.com/TheMistoAI/MistoControlNet-Flux-dev",
     "commit": "79e3982"
+  },
+  {
+    "repo": "https://github.com/chflame163/ComfyUI_LayerStyle",
+    "commit": "c7c61ff"
+  },
+  {
+    "repo": "https://github.com/chflame163/ComfyUI_CatVTON_Wrapper",
+    "commit": "a1bb445"
+  },
+  {
+    "repo": "https://github.com/sipherxyz/comfyui-art-venture",
+    "commit": "a91efef"
   }
 ]

@@ -1,0 +1,179 @@
+{
+    "10": {
+      "inputs": {
+        "image": "https://i.ibb.co/vQ5pp97/12499060-A-man-standing-straight-and-confident.jpg",
+        "upload": "image"
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image"
+      }
+    },
+    "11": {
+      "inputs": {
+        "image": "https://i.ibb.co/NtT20ND/ysl-shirt.jpg",
+        "upload": "image"
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image"
+      }
+    },
+    "12": {
+      "inputs": {
+        "sam_model": "sam_vit_h (2.56GB)",
+        "grounding_dino_model": "GroundingDINO_SwinT_OGC (694MB)",
+        "threshold": 0.3,
+        "detail_method": "VITMatte",
+        "detail_erode": 6,
+        "detail_dilate": 6,
+        "black_point": 0.01,
+        "white_point": 0.99,
+        "process_detail": false,
+        "prompt": ["22", 0],
+        "device": "cuda",
+        "max_megapixels": 2,
+        "image": ["10", 0]
+      },
+      "class_type": "LayerMask: SegmentAnythingUltra V2",
+      "_meta": {
+        "title": "LayerMask: SegmentAnythingUltra V2"
+      }
+    },
+    "13": {
+      "inputs": {
+        "mask": ["12", 1]
+      },
+      "class_type": "LayerMask: MaskPreview",
+      "_meta": {
+        "title": "LayerMask: MaskPreview"
+      }
+    },
+    "14": {
+      "inputs": {
+        "mask_grow": 25,
+        "mixed_precision": "fp16",
+        "seed": 340726365237288,
+        "steps": 40,
+        "cfg": 2.5,
+        "image": ["10", 0],
+        "mask": ["12", 1],
+        "refer_image": ["11", 0]
+      },
+      "class_type": "CatVTONWrapper",
+      "_meta": {
+        "title": "CatVTON Wrapper"
+      }
+    },
+    "15": {
+      "inputs": {
+        "images": ["14", 0]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    },
+    "16": {
+      "inputs": {
+        "image": "https://i.ibb.co/j38tsK6/jeans.jpg",
+        "upload": "image"
+      },
+      "class_type": "LoadImage",
+      "_meta": {
+        "title": "Load Image"
+      }
+    },
+    "17": {
+      "inputs": {
+        "sam_model": "sam_vit_h (2.56GB)",
+        "grounding_dino_model": "GroundingDINO_SwinT_OGC (694MB)",
+        "threshold": 0.3,
+        "detail_method": "VITMatte",
+        "detail_erode": 6,
+        "detail_dilate": 6,
+        "black_point": 0.01,
+        "white_point": 0.02,
+        "process_detail": false,
+        "prompt": ["24", 0],
+        "device": "cuda",
+        "max_megapixels": 2,
+        "image": ["14", 0]
+      },
+      "class_type": "LayerMask: SegmentAnythingUltra V2",
+      "_meta": {
+        "title": "LayerMask: SegmentAnythingUltra V2"
+      }
+    },
+    "18": {
+      "inputs": {
+        "mask_grow": 25,
+        "mixed_precision": "fp16",
+        "seed": 391999134685170,
+        "steps": 40,
+        "cfg": 2.5,
+        "image": ["14", 0],
+        "mask": ["17", 1],
+        "refer_image": ["16", 0]
+      },
+      "class_type": "CatVTONWrapper",
+      "_meta": {
+        "title": "CatVTON Wrapper"
+      }
+    },
+    "19": {
+      "inputs": {
+        "images": ["18", 0]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    },
+    "20": {
+      "inputs": {
+        "mask": ["17", 1]
+      },
+      "class_type": "MaskPreview+",
+      "_meta": {
+        "title": "🔧 Mask Preview"
+      }
+    },
+    "22": {
+      "inputs": {
+        "text_positive": "shirt",
+        "text_negative": "",
+        "style": "base",
+        "log_prompt": "No",
+        "style_name": ""
+      },
+      "class_type": "SDXLPromptStyler",
+      "_meta": {
+        "title": "SDXL Prompt Styler"
+      }
+    },
+    "23": {
+      "inputs": {
+        "filename_prefix": "DoubleA",
+        "images": ["18", 0]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    },
+    "24": {
+      "inputs": {
+        "text_positive": "pant, belt",
+        "text_negative": "",
+        "style": "base",
+        "log_prompt": "No",
+        "style_name": ""
+      },
+      "class_type": "SDXLPromptStyler",
+      "_meta": {
+        "title": "SDXL Prompt Styler"
+      }
+    }
+  }
+  
